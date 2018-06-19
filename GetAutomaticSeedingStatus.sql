@@ -2,6 +2,7 @@ USE master;
 
 SELECT local_database_name,
 internal_state_desc,
+remote_machine_name,
 database_size_bytes / 1045876 AS [Database Size (mb)],
 transferred_size_bytes / 1045876 AS [Transferred Size (mb)],
 transfer_rate_bytes_per_second / 1045876 AS [Transfer Rate/Sec (mb)],
@@ -15,4 +16,6 @@ END
 + ':' + RIGHT('0' + RTRIM(((database_size_bytes - transferred_size_bytes) / transfer_rate_bytes_per_second) % 3600 / 60), 2) 
 + ':' + RIGHT('0' + RTRIM(((database_size_bytes - transferred_size_bytes) / transfer_rate_bytes_per_second) % 60), 2) AS [Time Remaining]
 FROM sys.dm_hadr_physical_seeding_stats
-WHERE internal_state_desc = 'ReadingAndSendingData';
+WHERE internal_state_desc = 'ReadingAndSendingData'
+ORDER BY remote_machine_name;
+
